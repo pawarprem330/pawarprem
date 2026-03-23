@@ -1,0 +1,190 @@
+1.servo motar
+
+#include <Servo.h>   // Correct library
+
+Servo servoBase;     // Create servo object
+
+void setup()
+{
+  servoBase.attach(9);   // Connect servo to pin 9
+}
+
+void loop()
+{
+  // Move from 0 to 180 degrees
+  for (int i = 0; i <= 180; i++)
+  {
+    servoBase.write(i);
+    delay(20);
+  }
+
+  // Move back from 180 to 0 degrees
+  for (int i = 180; i >= 0; i--)
+  {
+    servoBase.write(i);
+    delay(20);
+  }
+}
+
+2.blinking led
+
+void setup()
+{
+  pinMode(LED_BUILTIN, OUTPUT);   // Set built-in LED as output
+}
+
+void loop()
+{
+  digitalWrite(LED_BUILTIN, HIGH);  // LED ON
+  delay(1000);                      // Wait 1 second
+
+  digitalWrite(LED_BUILTIN, LOW);   // LED OFF
+  delay(1000);                      // Wait 1 second
+}
+
+3.light sensetive sensor
+
+int lightSensorValue = 0;
+
+void setup()
+{
+  pinMode(A0, INPUT);     // LDR connected to A0
+  pinMode(9, OUTPUT);     // LED connected to pin 9
+  Serial.begin(9600);     // Start serial communication
+}
+
+void loop()
+{
+  lightSensorValue = analogRead(A0);   // Read LDR value
+  Serial.println(lightSensorValue);    // Print value
+
+  int ledBrightness = map(lightSensorValue, 0, 1023, 0, 255);
+
+  analogWrite(9, ledBrightness);       // Control LED brightness
+
+  delay(100);
+}
+
+4.humidity sensor
+
+const int analogPin = A1;          // Sensor connected to A1
+int humiditySensorOutput = 0;
+
+void setup()
+{
+  Serial.begin(9600);              // Start serial monitor
+}
+
+void loop()
+{
+  humiditySensorOutput = analogRead(analogPin);   // Read sensor value
+
+  int humidityPercentage = map(humiditySensorOutput, 0, 1023, 0, 100);
+
+  Serial.print("Humidity: ");
+  Serial.print(humidityPercentage);
+  Serial.println(" %");
+
+  delay(1000);
+}
+
+5.ultra sonic sensor
+const int trigPin = 9;
+const int echoPin = 10;
+
+long duration;
+int distance;
+
+void setup()
+{
+  Serial.begin(9600);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop()
+{
+  // Clear trigger
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  // Send pulse
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read echo time
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calculate distance
+  distance = duration * 0.034 / 2;
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  delay(500);
+}
+
+
+6.udigital infared motion sensor 
+
+int sensorState = 0;
+int pirPin = 2;   // PIR sensor connected to pin 2
+
+void setup()
+{
+  pinMode(pirPin, INPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop()
+{
+  sensorState = digitalRead(pirPin);
+
+  if (sensorState == HIGH)
+  {
+    digitalWrite(LED_BUILTIN, HIGH);   // Motion detected → LED ON
+  }
+  else
+  {
+    digitalWrite(LED_BUILTIN, LOW);    // No motion → LED OFF
+  }
+
+  delay(100);
+}
+
+
+7. gas sensor 
+
+int LED = 13;           // LED pin
+int mq2_pin = A0;       // MQ2 sensor pin
+int sensorValue = 0;
+
+void setup()
+{
+  pinMode(LED, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  sensorValue = analogRead(mq2_pin);   // Read gas sensor value
+
+  if (sensorValue > 470)
+  {
+    digitalWrite(LED, HIGH);           // Gas detected → LED ON
+    Serial.print("Sensor Value: ");
+    Serial.println(sensorValue);
+    Serial.println("SMOKE DETECTED");
+  }
+  else
+  {
+    digitalWrite(LED, LOW);            // No gas → LED OFF
+    Serial.print("Sensor Value: ");
+    Serial.println(sensorValue);
+  }
+
+  delay(500);
+}
